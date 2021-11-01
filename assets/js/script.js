@@ -2,8 +2,6 @@ var timeLeft = 5;
 var timerEl = document.querySelector("#timer");
 var quizStartClick = document.querySelector("#quizStart");
 
-
-
 // setting up the timer function  
 var countdown = function(event) {
   timeLeft = 5;
