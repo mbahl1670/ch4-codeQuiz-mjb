@@ -1,3 +1,39 @@
+var timeLeft = 5;
+var timerEl = document.querySelector("#timer");
+var quizStartClick = document.querySelector("#quizStart");
+
+
+
+// setting up the timer function  
+var countdown = function(event) {
+  timeLeft = 5;
+  event.preventDefault();
+  var timeInterval = setInterval(function () {
+    if (timeLeft > 0) {
+      timerEl.textContent = "Time: " + timeLeft;
+      timeLeft--;
+    }
+    else {
+      timerEl.textContent = "Time: 0";
+      clearInterval(timeInterval);
+    }
+  }, 1000);
+} 
+
+
+// when the button is clicked, the Quiz & Timer start
+quizStartClick.addEventListener("click", countdown);
+
+
+
+
+
+
+
+
+
+
+
 var quizQA = [
   {
     question: "What is the name of the fictional town Buffy the Vampire Slayer takes place in?",

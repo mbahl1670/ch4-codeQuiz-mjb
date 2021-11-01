@@ -64,6 +64,7 @@ main p {
     padding: 15px 25px;
     font-size: 2.5em;
     border-radius: 15px;
+    margin-bottom: 40px;
 }
 
 .quizContent button:hover {
