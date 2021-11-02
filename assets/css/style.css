@@ -71,3 +71,24 @@ main p {
     color: darkslateblue;
     background-color: rgba(72, 61, 139, .4);
 }
+
+.answers {
+    text-align: left;
+    font-size: .75em;
+    font-weight: normal;
+}
+
+.answerLine {
+    border: 2px solid black;
+    margin: 10px 10px;
+    padding: 5px 10px;
+    width: 30%;
+    color: white;
+    background-color: darkslateblue;
+    border-radius: 5px;
+}
+
+.answerLine:hover {
+    background-color: violet;
+}
+

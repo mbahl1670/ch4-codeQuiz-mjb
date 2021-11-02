@@ -1,11 +1,13 @@
 var timeLeft = 5;
 var timerEl = document.querySelector("#timer");
 var quizStartClick = document.querySelector("#quizStart");
+var headingEl = document.querySelector("#quiz-heading");
+var descriptionEl = document.querySelector("#description");
+var quizContentEl = document.querySelector(".quizContent");
 
 // setting up the timer function  
-var countdown = function(event) {
+var countdown = function() {
   timeLeft = 5;
-  event.preventDefault();
   var timeInterval = setInterval(function () {
     if (timeLeft > 0) {
       timerEl.textContent = "Time: " + timeLeft;
@@ -18,9 +20,40 @@ var countdown = function(event) {
   }, 1000);
 } 
 
+var startQuiz = function () {
+  // start the coundown
+  countdown();
+
+  // display the quiz questions and answers on the screen
+  quizStartClick.remove();
+  descriptionEl.remove();
+  headingEl.textContent = quizQA[0].question;
+  var answersEl = document.createElement("ol");
+  answersEl.className = "answers";
+  var answer1El = document.createElement("li");
+  answer1El.className = "answerLine";
+  var answer2El = document.createElement("li");
+  answer2El.className = "answerLine";
+  var answer3El = document.createElement("li");
+  answer3El.className = "answerLine";
+  var answer4El = document.createElement("li");
+  answer4El.className = "answerLine";
+  answer1El.textContent = "1.     " + quizQA[0].answer1;
+  answer2El.textContent = "2.     " + quizQA[0].answer2;
+  answer3El.textContent = "3.     " + quizQA[0].answer3;
+  answer4El.textContent = "4.     " + quizQA[0].answer4;
+  answersEl.appendChild(answer1El);
+  answersEl.appendChild(answer2El);
+  answersEl.appendChild(answer3El);
+  answersEl.appendChild(answer4El);
+  headingEl.appendChild(answersEl);
+  quizContentEl.appendChild(headingEl);
+
+
+}
 
 // when the button is clicked, the Quiz & Timer start
-quizStartClick.addEventListener("click", countdown);
+quizStartClick.addEventListener("click", startQuiz);
 
 
 
