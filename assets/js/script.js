@@ -1,4 +1,5 @@
 var timeLeft = 5;
+var qNumber = 0;
 var timerEl = document.querySelector("#timer");
 var quizStartClick = document.querySelector("#quizStart");
 var headingEl = document.querySelector("#quiz-heading");
@@ -53,47 +54,69 @@ var createQA = function(questionNumber) {
 
 
 
-var startQuiz = function () {
-  // start the coundown
-  countdown();
-
-  // display the quiz questions and answers on the screen
-  quizStartClick.remove();
-  descriptionEl.remove();
-  
-  createQA(0);
-  
-}
-
-
+// FUNCTIONS FOR CHECKING IF AN ANSWER IS CORRECT
 var answerClick = function(event) {
-
+  
   if (event.target.matches(".answerLine")) {
     var ansId = event.target.getAttribute("data-AnsID");
-    checkAnswer(ansId);
-  
+    checkAnswer(ansId);  
   }
 };
 
 var checkAnswer = function(ansID) {
+  var correct = false;
   console.log(ansID);
+  if (ansID === quizQA[qNumber].correctAnswer) {
+    correct = true;
+    console.log("correct answer");
+  }
+  else {
+    console.log("Wrong");
+  }
+
+  var isCorrectEl = document.createElement("div");
+  isCorrectEl.className = "correctAnswer";
+  var isCorrectAnswerEl = document.createElement("h2");
+  if (correct) {
+    isCorrectAnswerEl.textContent = "Correct";
+  }
+  else {
+    isCorrectAnswerEl.textContent = "Wrong!";
+  }
+  isCorrectEl.append(isCorrectAnswerEl);
+  quizContentEl.appendChild(isCorrectEl);
+  qNumber++;
 };
 
-
+// event listner that is looking for the click on an answer
 pageContentEl.addEventListener("click", answerClick);
+//END OF FUNCTIONS THAT WILL TELL IF AN ANSWER IS CORRECT OR NOT
+
+
+
+
+
+
+
+
+
+
+// function to start the quiz
+var startQuiz = function () {
+  // start the coundown
+  qNumber = 0;
+  countdown();
+  
+  // display the quiz questions and answers on the screen
+  quizStartClick.remove();
+  descriptionEl.remove();
+  
+  createQA(qNumber);
+  
+}
 
 // when the button is clicked, the Quiz & Timer start
 quizStartClick.addEventListener("click", startQuiz);
-
-
-
-
-
-
-
-
-
-
 
 var quizQA = [
   {
@@ -102,7 +125,7 @@ var quizQA = [
     answer2: "Sunnydale",
     answer3: "Riverdale",
     answer4: "Paradise",
-    correctAnswer: 2
+    correctAnswer: "2"
   },
   {
     question: "What is the name of Buffy's best friend?",
@@ -110,7 +133,7 @@ var quizQA = [
     answer2: "Elena Gilbert",
     answer3: "Cordelia Chase",
     answer4: "Willow Rosenthal",
-    correctAnswer: 4
+    correctAnswer: "4"
   },
   {
     question: "What is the name of the actress who played Buffy?",
@@ -118,7 +141,7 @@ var quizQA = [
     answer2: "Eliza Dushku",
     answer3: "Alyson Hannigan",
     answer4: "Nina Dobrev",
-    correctAnswer: 1
+    correctAnswer: "1"
   },
   {
     question: "Who sired Angel, the first vampire Buffy fell in love with?",
@@ -126,7 +149,7 @@ var quizQA = [
     answer2: "The Master",
     answer3: "Darla",
     answer4: "Dracula",
-    correctAnswer: 3
+    correctAnswer: "3"
   },
   {
     question: "What type of monster never appeard on Buffy",
@@ -134,7 +157,7 @@ var quizQA = [
     answer2: "Godzilla",
     answer3: "Werewolf",
     answer4: "Demon",
-    correctAnswer: 2
+    correctAnswer: "2"
   },
   {
     question: "According to Xander in the episode 'Prophecy Girl', what kind of music is the music of pain?",
@@ -142,6 +165,6 @@ var quizQA = [
     answer2: "Death Metal",
     answer3: "Korean Pop",
     answer4: "Classical",
-    correctAnswer: 1
+    correctAnswer: "1"
   }
 ];
