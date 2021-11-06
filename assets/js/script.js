@@ -4,9 +4,24 @@ var timerEl = document.querySelector("#timer");
 var quizStartClickEl = document.querySelector("#quizStart");
 var headingEl = document.querySelector("#quiz-heading");
 var descriptionEl = document.querySelector("#description");
-var quizContentEl = document.querySelector(".quizContent");
+var quizContentEl = document.querySelector("#quizContent");
 var pageContentEl = document.querySelector("#page-content");
-// var isCorrectEl = document.querySelector("isCorrect");
+var correct = false;
+var answersEl = document.createElement("ol");
+answersEl.className = "answers";
+var answer1El = document.createElement("li");
+answer1El.className = "answerLine";
+answer1El.setAttribute("data-ansID", 1);
+var answer2El = document.createElement("li");
+answer2El.className = "answerLine";
+answer2El.setAttribute("data-ansID", 2);
+var answer3El = document.createElement("li");
+answer3El.className = "answerLine";
+answer3El.setAttribute("data-ansID", 3);
+var answer4El = document.createElement("li");
+answer4El.className = "answerLine";
+answer4El.setAttribute("data-ansID", 4);
+
 
 // setting up the timer function  
 var countdown = function() {
@@ -27,30 +42,10 @@ var countdown = function() {
 // function that will read the QA array and display the selected question and answer from the array
 var createQA = function(questionNumber) {
   headingEl.textContent = quizQA[questionNumber].question;
-  var answersEl = document.createElement("ol");
-  answersEl.className = "answers";
-  var answer1El = document.createElement("li");
-  answer1El.className = "answerLine";
-  answer1El.setAttribute("data-ansID", 1);
-  var answer2El = document.createElement("li");
-  answer2El.className = "answerLine";
-  answer2El.setAttribute("data-ansID", 2);
-  var answer3El = document.createElement("li");
-  answer3El.className = "answerLine";
-  answer3El.setAttribute("data-ansID", 3);
-  var answer4El = document.createElement("li");
-  answer4El.className = "answerLine";
-  answer4El.setAttribute("data-ansID", 4);
   answer1El.textContent = "1.     " + quizQA[questionNumber].answer1;
   answer2El.textContent = "2.     " + quizQA[questionNumber].answer2;
   answer3El.textContent = "3.     " + quizQA[questionNumber].answer3;
   answer4El.textContent = "4.     " + quizQA[questionNumber].answer4;
-  answersEl.appendChild(answer1El);
-  answersEl.appendChild(answer2El);
-  answersEl.appendChild(answer3El);
-  answersEl.appendChild(answer4El);
-  headingEl.appendChild(answersEl);
-  quizContentEl.appendChild(headingEl);
 }
 
 
@@ -61,26 +56,31 @@ var answerClick = function(event) {
     var ansId = event.target.getAttribute("data-AnsID");
     correct = checkAnswer(ansId);  
   }
+  createQA(qNumber);
 };
 
 
 
 var checkAnswer = function(ansID) {
-  var correct = false;
-  console.log(ansID);
   if (ansID === quizQA[qNumber].correctAnswer) {
     correct = true;
-    console.log("correct answer");
   }
   else {
     correct = false;
-    console.log("Wrong");
   }
+  
+  // looking to see if we have already told the user if they are correct or wrong
+  var oldIsCorrect = document.querySelector(".correctAnswer"); // if we haven't answered a question yet, i.e. this is the first qustion, oldIsCorrect will be null/false
+  if (oldIsCorrect) { // will only try to remove the element if it exists
+    oldIsCorrect.remove();
+  }
+  
+
   var isCorrectEl = document.createElement("div");
   isCorrectEl.className = "correctAnswer";
   var isCorrectAnswerEl = document.createElement("h2");
   if (correct) {
-    isCorrectAnswerEl.textContent = "Correct";
+    isCorrectAnswerEl.textContent = "Correct!";
   }
   else {
     isCorrectAnswerEl.textContent = "Wrong!";
@@ -108,10 +108,18 @@ var startQuiz = function () {
   qNumber = 0;
   countdown();
   
-  // display the quiz questions and answers on the screen
+  // remove the button and descriptopn of the quiz
   quizStartClickEl.remove();
   descriptionEl.remove();
   
+  // display the quiz questions and answers on the screen
+  answersEl.appendChild(answer1El);
+  answersEl.appendChild(answer2El);
+  answersEl.appendChild(answer3El);
+  answersEl.appendChild(answer4El);
+  quizContentEl.appendChild(headingEl);
+  quizContentEl.appendChild(answersEl);
+  quizContentEl.className = "answerContent";
   createQA(qNumber);
 }
 
