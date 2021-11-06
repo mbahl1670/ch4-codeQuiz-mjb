@@ -1,11 +1,12 @@
 var timeLeft = 5;
 var qNumber = 0;
 var timerEl = document.querySelector("#timer");
-var quizStartClick = document.querySelector("#quizStart");
+var quizStartClickEl = document.querySelector("#quizStart");
 var headingEl = document.querySelector("#quiz-heading");
 var descriptionEl = document.querySelector("#description");
 var quizContentEl = document.querySelector(".quizContent");
 var pageContentEl = document.querySelector("#page-content");
+// var isCorrectEl = document.querySelector("isCorrect");
 
 // setting up the timer function  
 var countdown = function() {
@@ -56,12 +57,13 @@ var createQA = function(questionNumber) {
 
 // FUNCTIONS FOR CHECKING IF AN ANSWER IS CORRECT
 var answerClick = function(event) {
-  
   if (event.target.matches(".answerLine")) {
     var ansId = event.target.getAttribute("data-AnsID");
-    checkAnswer(ansId);  
+    correct = checkAnswer(ansId);  
   }
 };
+
+
 
 var checkAnswer = function(ansID) {
   var correct = false;
@@ -71,9 +73,9 @@ var checkAnswer = function(ansID) {
     console.log("correct answer");
   }
   else {
+    correct = false;
     console.log("Wrong");
   }
-
   var isCorrectEl = document.createElement("div");
   isCorrectEl.className = "correctAnswer";
   var isCorrectAnswerEl = document.createElement("h2");
@@ -86,10 +88,9 @@ var checkAnswer = function(ansID) {
   isCorrectEl.append(isCorrectAnswerEl);
   quizContentEl.appendChild(isCorrectEl);
   qNumber++;
+  return correct;
 };
 
-// event listner that is looking for the click on an answer
-pageContentEl.addEventListener("click", answerClick);
 //END OF FUNCTIONS THAT WILL TELL IF AN ANSWER IS CORRECT OR NOT
 
 
@@ -108,15 +109,16 @@ var startQuiz = function () {
   countdown();
   
   // display the quiz questions and answers on the screen
-  quizStartClick.remove();
+  quizStartClickEl.remove();
   descriptionEl.remove();
   
   createQA(qNumber);
-  
 }
 
+// event listner that is looking for the click on an answer
+pageContentEl.addEventListener("click", answerClick);
 // when the button is clicked, the Quiz & Timer start
-quizStartClick.addEventListener("click", startQuiz);
+quizStartClickEl.addEventListener("click", startQuiz);
 
 var quizQA = [
   {
