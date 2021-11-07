@@ -19,7 +19,7 @@ header {
     border: 1px solid white;
 }
 
-.highScore:hover {
+.highScore:hover, .highScoreButton:hover {
     color: white;
     background: violet;
     border: 1px solid black;
@@ -132,5 +132,28 @@ main p {
     margin-left: 10px;
 }
 
+.highScoreDisplay {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    width: 50%;
+}
 
-   
+.highScoreList {
+    list-style-type: none;
+    border: 2px solid black;
+    margin: 4px 0;
+    padding: 5px 10px;
+    background-color: rgba(72, 61, 139, .4);
+}
+
+.highScoreButton {
+    width: fit-content;
+    color: whitesmoke;
+    background-color: darkslateblue;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-right: 10px;
+    margin-top: 15px;
+}   

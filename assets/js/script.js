@@ -9,7 +9,7 @@ var quizContentEl = document.querySelector("#quizContent");
 var pageContentEl = document.querySelector("#page-content");
 var highScoreLinkEl = document.querySelector("#link");
 var correct = false;
-var answersEl = document.createElement("ol");
+var answersEl = document.createElement("ul");
 answersEl.className = "answers";
 var answer1El = document.createElement("li");
 answer1El.className = "answerLine";
@@ -27,7 +27,7 @@ answer4El.setAttribute("data-ansID", 4);
 
 // setting up the timer function  
 var countdown = function() {
-  timeLeft = 2;
+  timeLeft = 90;
   var timeInterval = setInterval(function () {
     if (timeLeft > 0 && qNumber < quizQA.length) {
       timerEl.textContent = "Time: " + timeLeft;
@@ -87,6 +87,16 @@ var answerClick = function(event) {
         alert("You need to enter your initials!");
       }
   }
+
+  if (event.target.matches("#reload")) {
+    location.reload();
+  } 
+  
+  if (event.target.matches("#clear")) {
+    highScores = [];
+    saveHighScore(highScores);
+    displayHighScores();
+  }
 };
 
 
@@ -135,7 +145,12 @@ var endQuiz = function() {
   }
   // display your high score
   var finalScoreEl = document.createElement("div");
-  finalScoreEl.textContent = "Your final score is " + timeLeft + ".";
+  if (timeLeft < 0) {
+    finalScoreEl.textContent = "Your final score is " + "0" + ".";  
+  }
+  else {
+    finalScoreEl.textContent = "Your final score is " + timeLeft + ".";
+  }
   finalScoreEl.className = "finalScore";
   
   // create the input form to submit your initials
@@ -150,7 +165,7 @@ var endQuiz = function() {
   initialEl.setAttribute("id", "initials");
   var submitInitialsEl = document.createElement("button");
   submitInitialsEl.className = "submitInitialsBtn";
-  submitInitialsEl.setAttribute("type", "submit");
+  submitInitialsEl.setAttribute("type", "click");
   submitInitialsEl.textContent = "Submit";
   quizContentEl.className = "finalScoreContent";
   quizContentEl.appendChild(finalScoreEl);
@@ -181,6 +196,9 @@ var loadHighScorePage = function() {
   // capture the entered values for the new high score and add it to the list
   var initials = document.querySelector("input[name='initials']").value;
   var score = timeLeft;
+  if (score < 0) {
+    score = 0;
+  }
   var newHighScore = {
     initials: initials,
     score: score
@@ -199,9 +217,19 @@ var saveHighScore = function(newHighScores) {
 
 
 var displayHighScores = function() {
-  headingEl.textContent = "High scores";
+  localHighScores = localStorage.getItem("highScores");
+  if (!localHighScores) {
+    localHighScores = [];
+  }
+  else {
+    localHighScores = JSON.parse(localHighScores);
+  }
+  quizContentEl.className = "finalScoreContent";
+  headingEl.textContent = "High scores";  
   var isButton = document.querySelector(".finalScore");
   var isForm = document.querySelector(".initial-form");
+  var isDisplay = document.querySelector(".highScoreDispaly");
+  var isCorrect = document.querySelector(".correctAnswer");
   if (isForm) {
     isForm.remove();
   }
@@ -214,13 +242,42 @@ var displayHighScores = function() {
   if (descriptionEl) {
     descriptionEl.remove();
   }
+  if (isDisplay) {
+    isDisplay.remove();
+  }
+  if (isCorrect) {
+    isCorrect.remove();
+  }
+  
   
   var scoreDisplays = document.createElement("div");
-  scoreDisplays.textContent = "list of high scores";
-  var scoreButtons = document.createElement("div");
-  scoreButtons.textContent = "two buttons";
+  scoreDisplays.className = "highScoreDispaly";
+  
+  for (i = 0; i < localHighScores.length; i++) {
+    var scoreListItem = document.createElement("div");
+    scoreListItem.className = "highScoreList";
+    scoreListItem.textContent = i+1 + ".      " + localHighScores[i].initials + "  -  " + localHighScores[i].score;
+    scoreDisplays.appendChild(scoreListItem);
+  }
+
+
+  var scoreButtonsEl = document.createElement("div");
+  scoreButtonsEl.className = "initial-form";
+  var goBackEl = document.createElement("button");
+  goBackEl.className = "highScoreButton";  
+  goBackEl.setAttribute("type", "click");
+  goBackEl.textContent = "Go back";
+  goBackEl.setAttribute("id", "reload")
+  var clearEl = document.createElement("button");
+  clearEl.className = "highScoreButton";
+  clearEl.setAttribute("type", "click");
+  clearEl.textContent = "Clear high scores"
+  clearEl.setAttribute("id", "clear");
+  
   quizContentEl.appendChild(scoreDisplays);
-  quizContentEl.appendChild(scoreButtons);
+  scoreButtonsEl.appendChild(goBackEl);
+  scoreButtonsEl.appendChild(clearEl);
+  quizContentEl.appendChild(scoreButtonsEl);
 }
 
 
@@ -242,10 +299,6 @@ var startQuiz = function () {
   quizContentEl.appendChild(answersEl);
   quizContentEl.className = "answerContent";
   createQA(qNumber);
-}
-
-var working = function() {
-  console.log("working");
 }
 
 // event listner that is looking for the click on an answer
