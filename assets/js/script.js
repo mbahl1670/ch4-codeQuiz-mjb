@@ -1,11 +1,13 @@
-var timeLeft = 5;
+var timeLeft = 90;
 var qNumber = 0;
+var highScores = [];
 var timerEl = document.querySelector("#timer");
 var quizStartClickEl = document.querySelector("#quizStart");
 var headingEl = document.querySelector("#quiz-heading");
 var descriptionEl = document.querySelector("#description");
 var quizContentEl = document.querySelector("#quizContent");
 var pageContentEl = document.querySelector("#page-content");
+var highScoreLinkEl = document.querySelector("#link");
 var correct = false;
 var answersEl = document.createElement("ol");
 answersEl.className = "answers";
@@ -25,15 +27,20 @@ answer4El.setAttribute("data-ansID", 4);
 
 // setting up the timer function  
 var countdown = function() {
-  timeLeft = 5;
+  timeLeft = 2;
   var timeInterval = setInterval(function () {
-    if (timeLeft > 0) {
+    if (timeLeft > 0 && qNumber < quizQA.length) {
       timerEl.textContent = "Time: " + timeLeft;
       timeLeft--;
+    }
+    else if (timeLeft > 0) {
+      timerEl.textContent = "Time: " + timeLeft;
+      clearInterval(timeInterval);
     }
     else {
       timerEl.textContent = "Time: 0";
       clearInterval(timeInterval);
+      endQuiz();
     }
   }, 1000);
 } 
@@ -53,10 +60,33 @@ var createQA = function(questionNumber) {
 // FUNCTIONS FOR CHECKING IF AN ANSWER IS CORRECT
 var answerClick = function(event) {
   if (event.target.matches(".answerLine")) {
-    var ansId = event.target.getAttribute("data-AnsID");
-    correct = checkAnswer(ansId);  
+      var ansId = event.target.getAttribute("data-AnsID");
+      correct = checkAnswer(ansId);  
+      if (qNumber < quizQA.length) {
+        createQA(qNumber);
+      }
+      else  {
+        endQuiz();
+      }
   }
-  createQA(qNumber);
+
+  if (event.target.matches("#initials")) {
+    var oldIsCorrect = document.querySelector(".correctAnswer"); // if we haven't answered a question yet, i.e. this is the first qustion, oldIsCorrect will be null/false
+    if (oldIsCorrect) { // will only try to remove the element if it exists
+      oldIsCorrect.remove();
+    }
+  }
+
+  if (event.target.matches(".submitInitialsBtn")) {
+    // var taskNameInput = document.querySelector("input[name='initials']").value;
+    var isInitials = document.querySelector("input[name='initials']").value;
+      if (isInitials) {
+        loadHighScorePage();
+      } 
+      else {
+        alert("You need to enter your initials!");
+      }
+  }
 };
 
 
@@ -67,6 +97,7 @@ var checkAnswer = function(ansID) {
   }
   else {
     correct = false;
+    timeLeft = timeLeft - 10;
   }
   
   // looking to see if we have already told the user if they are correct or wrong
@@ -94,12 +125,103 @@ var checkAnswer = function(ansID) {
 //END OF FUNCTIONS THAT WILL TELL IF AN ANSWER IS CORRECT OR NOT
 
 
+// End Quiz function
+var endQuiz = function() {
+  headingEl.textContent = "All done!";
+  answersEl.remove();
+  var isCorrect = document.querySelector(".correctAnswer");
+  if (isCorrect) {
+    isCorrect.remove();
+  }
+  // display your high score
+  var finalScoreEl = document.createElement("div");
+  finalScoreEl.textContent = "Your final score is " + timeLeft + ".";
+  finalScoreEl.className = "finalScore";
+  
+  // create the input form to submit your initials
+  var initialFormEl = document.createElement("div");
+  initialFormEl.className = "initial-form";
+  var labelEl = document.createElement("label");
+  labelEl.setAttribute("for", "initials");
+  labelEl.textContent = "Enter initials:  ";
+  var initialEl = document.createElement("input");
+  initialEl.setAttribute("type", "text");
+  initialEl.setAttribute("name", "initials");
+  initialEl.setAttribute("id", "initials");
+  var submitInitialsEl = document.createElement("button");
+  submitInitialsEl.className = "submitInitialsBtn";
+  submitInitialsEl.setAttribute("type", "submit");
+  submitInitialsEl.textContent = "Submit";
+  quizContentEl.className = "finalScoreContent";
+  quizContentEl.appendChild(finalScoreEl);
+  initialFormEl.appendChild(labelEl);
+  initialFormEl.appendChild(initialEl);
+  initialFormEl.appendChild(submitInitialsEl);
+  quizContentEl.appendChild(initialFormEl);
+  if (isCorrect) {  // do not try to add correct/wrong if no questions were answered
+    quizContentEl.appendChild(isCorrect);
+  }
+}
 
 
 
 
 
 
+// Display the High Scores and load them into storage
+var loadHighScorePage = function() {
+  // load what high scores are saved in local storage
+  localHighScores = localStorage.getItem("highScores");
+  if (!localHighScores) {
+    localHighScores = [];
+  }
+  else {
+    localHighScores = JSON.parse(localHighScores);
+  }
+  // capture the entered values for the new high score and add it to the list
+  var initials = document.querySelector("input[name='initials']").value;
+  var score = timeLeft;
+  var newHighScore = {
+    initials: initials,
+    score: score
+  };
+  localHighScores.push(newHighScore);
+  console.log(localHighScores);
+  saveHighScore(localHighScores);
+  
+  // dynamically change the display of the screen to show the high scores
+  displayHighScores();
+}
+
+var saveHighScore = function(newHighScores) {
+  localStorage.setItem("highScores", JSON.stringify(newHighScores));
+};
+
+
+var displayHighScores = function() {
+  headingEl.textContent = "High scores";
+  var isButton = document.querySelector(".finalScore");
+  var isForm = document.querySelector(".initial-form");
+  if (isForm) {
+    isForm.remove();
+  }
+  if (isButton) {
+    isButton.remove();
+  }
+  if (quizStartClickEl) {
+    quizStartClickEl.remove();
+  }
+  if (descriptionEl) {
+    descriptionEl.remove();
+  }
+  
+  var scoreDisplays = document.createElement("div");
+  scoreDisplays.textContent = "list of high scores";
+  var scoreButtons = document.createElement("div");
+  scoreButtons.textContent = "two buttons";
+  quizContentEl.appendChild(scoreDisplays);
+  quizContentEl.appendChild(scoreButtons);
+}
 
 
 // function to start the quiz
@@ -107,7 +229,6 @@ var startQuiz = function () {
   // start the coundown
   qNumber = 0;
   countdown();
-  
   // remove the button and descriptopn of the quiz
   quizStartClickEl.remove();
   descriptionEl.remove();
@@ -123,10 +244,16 @@ var startQuiz = function () {
   createQA(qNumber);
 }
 
+var working = function() {
+  console.log("working");
+}
+
 // event listner that is looking for the click on an answer
 pageContentEl.addEventListener("click", answerClick);
 // when the button is clicked, the Quiz & Timer start
 quizStartClickEl.addEventListener("click", startQuiz);
+highScoreLinkEl.addEventListener("click", displayHighScores);
+
 
 var quizQA = [
   {

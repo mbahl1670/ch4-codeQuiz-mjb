@@ -67,14 +67,13 @@ main p {
     margin-bottom: 40px;
 }
 
-.quizContent button:hover {
+.quizContent button:hover, .submitInitialsBtn:hover {
     color: darkslateblue;
     background-color: rgba(72, 61, 139, .4);
 }
 
 .answerContent {
     display: flex;
-    /* align-items: center; */
     flex-direction: column;
     text-align: center;
     width: 50%;
@@ -110,3 +109,28 @@ main p {
     color: grey;
     font-weight: lighter;
 }
+
+
+/* Style for displaying the FINAL SCORE */
+.finalScoreContent {
+    width: 50%;
+}
+
+.finalScore, .initial-form {
+    margin: 0 0 10px 0;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.submitInitialsBtn {
+    width: fit-content;
+    color: whitesmoke;
+    background-color: darkslateblue;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-left: 10px;
+}
+
+
+   
