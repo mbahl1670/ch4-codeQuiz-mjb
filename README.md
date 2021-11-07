@@ -24,7 +24,6 @@
 
 ![Screenshot (19)](https://user-images.githubusercontent.com/90292697/140652805-5f867053-8ce4-4d4c-adda-4009c8d0a0a1.png)
 
-![Screenshot (15)](https://user-images.githubusercontent.com/90292697/140652821-1459cd1b-0feb-4438-aef2-82163e05e9e2.png)
 
 ## Git Repository![Uploading Screenshot (17).png…]()
 
@@ -35,4 +34,16 @@ https://mbahl1670.github.io/ch4-codeQuiz-mjb/
 
 
 ## How this was accomplished
-* 
+* Created GitHub issues for each step of creating the quiz
+* Wrote initial HTML & CSS pages for landing site
+* Created array of questions and answers
+* Set up an event listener for the start button
+* Start button initiates a countdown function using setInterval function and displayes the first question
+* Set up event listenrs to the main page, clicking on an answer advances the quiz to the next question
+* Incorrect answers will subtract time from the countdown timer
+* Created and endQuiz function, when timer reaches 0 or all questions are answered the function is called
+* Multple event listeners created for the buttons useded in the endQuiz area, (initials, submit initials, go back to restart quiz, clear the high scores)
+* When initials are submitted they are stored to local storage
+
+## Known issues
+* Multiple places in the code that could use refractoring, ran out of time however
