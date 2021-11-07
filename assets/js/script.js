@@ -212,6 +212,9 @@ var loadHighScorePage = function() {
 }
 
 var saveHighScore = function(newHighScores) {
+  // sort the array of objects
+  newHighScores.sort(function(a, b){return b.score - a.score});
+
   localStorage.setItem("highScores", JSON.stringify(newHighScores));
 };
 
@@ -224,6 +227,7 @@ var displayHighScores = function() {
   else {
     localHighScores = JSON.parse(localHighScores);
   }
+  // look for elements that may be on the page that need to be deleted before we can add the high scores
   quizContentEl.className = "finalScoreContent";
   headingEl.textContent = "High scores";  
   var isButton = document.querySelector(".finalScore");
@@ -253,6 +257,7 @@ var displayHighScores = function() {
   var scoreDisplays = document.createElement("div");
   scoreDisplays.className = "highScoreDispaly";
   
+  // loop through the array add an element with the high score to be appended
   for (i = 0; i < localHighScores.length; i++) {
     var scoreListItem = document.createElement("div");
     scoreListItem.className = "highScoreList";
@@ -260,7 +265,7 @@ var displayHighScores = function() {
     scoreDisplays.appendChild(scoreListItem);
   }
 
-
+  // create the buttons to either start again or clear high schores
   var scoreButtonsEl = document.createElement("div");
   scoreButtonsEl.className = "initial-form";
   var goBackEl = document.createElement("button");
@@ -273,7 +278,7 @@ var displayHighScores = function() {
   clearEl.setAttribute("type", "click");
   clearEl.textContent = "Clear high scores"
   clearEl.setAttribute("id", "clear");
-  
+  // add everything to the page  
   quizContentEl.appendChild(scoreDisplays);
   scoreButtonsEl.appendChild(goBackEl);
   scoreButtonsEl.appendChild(clearEl);
